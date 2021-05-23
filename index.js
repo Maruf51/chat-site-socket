@@ -4,7 +4,9 @@ const cors = require('cors')
 const http = require('http');
 const server = http.createServer(app);
 const { Server } = require("socket.io");
-app.use(cors())
+app.use(cors({
+  cors: "*"
+}))
 const io = new Server(server, {
   cors: {
     origin: "*"

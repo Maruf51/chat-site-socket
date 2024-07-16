@@ -37,13 +37,43 @@ io.on('connection', (socket) => {
   })
 
   //send and get message
-  socket.on("sendMessage", ({ messageId, sendId, receiverId, message }) => {
+  socket.on("sendMessage", ({ chatId, receiverId, message }) => {
     const user = getUser(receiverId);
     if (user) {
       io.to(user.socketId).emit("getMessage", {
-        sendId,
-        messageId,
+        chatId,
         message,
+      });
+    }
+  });
+
+  //delete message
+  socket.on("deleteMessage", ({ messageId, receiverId }) => {
+    const user = getUser(receiverId);
+    if (user) {
+      io.to(user.socketId).emit("deleteMessage", {
+        messageId
+      });
+    }
+  });
+
+  //block user
+  socket.on("blockUser", ({ chatId, receiverId }) => {
+    const user = getUser(receiverId);
+    if (user) {
+      io.to(user.socketId).emit("blockUser", {
+        chatId,
+        userId: receiverId
+      });
+    }
+  });
+
+  //new chat
+  socket.on("newChat", ({ receiverId }) => {
+    const user = getUser(receiverId);
+    if (user) {
+      io.to(user.socketId).emit("newChat", {
+        newChat: true
       });
     }
   });
